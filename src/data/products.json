@@ -1,0 +1,141 @@
+[
+  {
+    "pid": 1,
+    "title": "East Asian Marvels",
+    "description": "Discover Hong Kong, Seoul, Tokyo, and Kyoto on this epic journey through East Asian metropolises.",
+    "code": "as1",
+    "price": 3000,
+    "status": true,
+    "stock": 50,
+    "category": "Asia",
+    "thumbnails": [
+      "https://i.insider.com/559c2c45ecad04df54fc8f8c?width=600&format=jpeg&auto=webp",
+      "https://media.istockphoto.com/id/878491166/photo/hong-kong-street-scene-mongkok-district-with-busses.jpg?s=612x612&w=0&k=20&c=9SnSMbZbjLtg03IcgOnCrNldZICDe_aYBUvUTrVh4wg="
+    ]
+  },
+  {
+    "pid": 2,
+    "title": "Delicious Latin Culture",
+    "description": "The best of culture, beaches, and delicious food: Mexico City, Havana, Lima, Cuzco and Machu Pichu.",
+    "code": "am1",
+    "price": 2600,
+    "status": true,
+    "stock": 30,
+    "category": "Americas",
+    "thumbnails": [
+      "https://www.shutterstock.com/image-photo/havana-cuba-september-14-2016-600nw-1027126117.jpg",
+      "https://www.sopitas.com/wp-content/uploads/2023/03/pasajes-secretos-de-teotihuacan-portada.jpg",
+      "https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1200,h_630/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/gkqwxddk0le3tv9bvbf4/Explore%20the%20Sacred%20Valley%20and%20Machu%20Picchu%20in%202%20Days.jpg"
+    ]
+  },
+  {
+    "pid": 3,
+    "title": "Central Europe Splendor",
+    "description": "Explore the stunning highlights of Central Europe: Vienna, Prague, and Budapest.",
+    "code": "eu1",
+    "price": 1500,
+    "status": true,
+    "stock": 50,
+    "category": "Europe",
+    "thumbnails": [
+      "https://media.nomadicmatt.com/2023/viennathreeday7.jpeg",
+      "https://www.outlooktravelmag.com/media/Prague-Main-jpg.webp"
+    ]
+  },
+  {
+    "pid": 4,
+    "title": "Discover Europe",
+    "description": "Perfect for first timers; discover the very best of the Old Continent: London, Paris, Rome.",
+    "code": "eu2",
+    "price": 2000,
+    "status": true,
+    "stock": 60,
+    "category": "Europe",
+    "thumbnails": [
+      "https://modularassets.cdn.ignitetravel.com/modular_multisite/wp-content/uploads/sites/2/2023/05/01091340/paris-1110x625-1.png",
+      "https://www.romeapartments.com/wp-content/uploads/fga-cityguide-upload/cgp/338/338_635610663830259994.jpg",
+      "https://media-cdn.tripadvisor.com/media/photo-s/1c/55/13/a8/london-what-a-beautiful.jpg"
+    ]
+  },
+  {
+    "pid": 5,
+    "title": "North Africa Adventure",
+    "description": "Pyramids, markets, and marvelous beaches await. Explore Marrakech, Tunis, Sousse, Cairo, and Luxor.",
+    "code": "af1",
+    "price": 1800,
+    "status": true,
+    "stock": 50,
+    "category": "Africa",
+    "thumbnails": [
+      "https://www.ootlah.com/wp-content/uploads/2020/12/luxor-temple-1.jpg",
+      "https://images.squarespace-cdn.com/content/v1/59d91cbac027d8973de77597/1680102261787-J2RKP6RHEO9IC8BULVUK/IMG_9702.jpeg?format=1500w"
+    ]
+  },
+  {
+    "pid": 6,
+    "title": "Southwest Asia Odyssey",
+    "description": "Amazing food, relaxation, and temples await in Bangkok, the beaches of Phuket and Koh Rang, Siem Reap (Angkow Wat), and Hanoi.",
+    "code": "as2",
+    "price": 2200,
+    "status": true,
+    "stock": 40,
+    "category": "Asia",
+    "thumbnails": [
+      "https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/angkor-wat-siem-reap-cambodia-artie-photography-artie-ng.jpg",
+      "https://static.toiimg.com/thumb/99343778/Train-street-in-Hanoi-Vietnam.jpg?width=1200&height=900"
+    ]
+  },
+  {
+    "pid": 7,
+    "title": "South American Cities",
+    "description": "Beaches in Rio, Tango in Buenos Aires, wine in Mendoza, and stunning views in Valparaiso and Santiago.",
+    "code": "am2",
+    "price": 2000,
+    "status": true,
+    "stock": 50,
+    "category": "Americas",
+    "thumbnails": [
+      "https://www.gla.ac.uk/media/Media_976421_smxx.jpg",
+      "https://res.cloudinary.com/hello-tickets/image/upload/c_limit,f_auto,q_auto,w_1300/v1705009752/lvazhvdzath12roffk3n.png"
+    ]
+  },
+  {
+    "pid": 8,
+    "title": "Explore Oceania",
+    "description": "Discover the cities, beaches, and wildlife of Austrailia, New Zealand, and Fiji.",
+    "code": "oc1",
+    "price": 4000,
+    "status": true,
+    "stock": 50,
+    "category": "Oceania",
+    "thumbnails": [
+      "https://samseesworld.com/wp-content/uploads/2023/03/Kangaroo-Island.jpg"
+    ]
+  },
+  {
+    "pid": 9,
+    "title": "African Safari",
+    "description": "Explore Nairobi, safari in Maasai Mara, and enjoy Zanzibar, Mt. Kilimanjaro, and Cape Town.",
+    "code": "af2",
+    "price": 3500,
+    "status": true,
+    "stock": 30,
+    "category": "Africa",
+    "thumbnails": [
+      "https://static1.squarespace.com/static/508870e0e4b046999d1b5540/5092f369e4b00927707a1f84/56d3498362cd9444cfcecc5a/1456700611734/?format=1500w"
+    ]
+  },
+  {
+    "pid": 10,
+    "title": "Scandanavian Escape",
+    "description": "Enjoy sweets and the sweet life in Copenhagen, Stockholm, and Helsinki",
+    "code": "eu3",
+    "price": 2400,
+    "status": true,
+    "stock": 40,
+    "category": "Europe",
+    "thumbnails": [
+      "https://www.travelguide.net/media/800x533/stockholm-gamla-stan-2-800x533.avif"
+    ]
+  }
+]
