@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Products</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/client.js" defer></script>
+</head>
+<body>
+    <h1>Real-Time Product List</h1>
+    <ul id="product-list">
+        {{#each products}}
+            <li data-id="{{this.id}}">
+                {{this.name}} - ${{this.price}}
+                <button class="delete-btn">Delete</button>
+            </li>
+        {{/each}}
+    </ul>
+    <form id="product-form">
+        <input type="text" id="product-name" placeholder="Product Name" required>
+        <input type="number" id="product-price" placeholder="Product Price" required>
+        <button type="submit">Add Product</button>
+    </form>
+</body>
+</html>
