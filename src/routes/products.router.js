@@ -1,154 +1,198 @@
-
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
+const Product = require('../models/Product');
+const mongoose = require('mongoose');
 
-// Define path to the JSON file
-const productsFilePath = path.join(__dirname, '../data/products.json');
-const cartsFilePath = path.join(__dirname, '../data/carts.json');
+// Get all products with optional query params
+// router.get('/', async (req, res) => {
+//     try {
+//         const { limit = 10, page = 1, sort, category, price, status } = req.query;
+//         // const filters = query ? { category: query } : {};
+//         const filters = {};
+//         if (category) {
+//             filters.category = category; // Filter by category
+//         }
+//         if (price) {
+//             filters.price = Number(price); // Exact match for price
+//         }
+//         if (status !== undefined) {
+//             filters.status = status === 'true'; // Filter by boolean status
+//         }
+//         const sortOption = sort === 'asc' ? { price: 1 } : (sort === 'desc' ? { price: -1 } : {});
+//         const products = await Product.find(filters).sort(sortOption).limit(Number(limit)).skip((page - 1) * limit);
+//         const totalProducts = await Product.countDocuments(filters);
+//         const totalPages = Math.ceil(totalProducts / limit);
+        
+//         const response = {
+//             status: 'success',
+//             payload: products,
+//             totalPages,
+//             prevPage: page > 1 ? page - 1 : null,
+//             nextPage: page < totalPages ? page + 1 : null,
+//             page: Number(page),
+//             hasPrevPage: page > 1,
+//             hasNextPage: page < totalPages,
+//             prevLink: page > 1 ? `/products?limit=${limit}&page=${page - 1}&sort=${sort}&query=${query}` : null,
+//             nextLink: page < totalPages ? `/products?limit=${limit}&page=${page + 1}&sort=${sort}&query=${query}` : null
+//         };
 
+//         // Use JSON.stringify to pretty-print with 2-space indentation
+//         res.send(JSON.stringify(response, null, 2));
+//     } catch (error) {
+//         res.status(500).json({ status: 'error', message: error.message });
+//     }
+// });
 
-// Helper function to read JSON files
-const readJsonFile = (filePath) => {
+// Get all products with optional query params
+router.get('/', async (req, res) => {
     try {
-        const data = fs.readFileSync(filePath, 'utf-8');
-        return JSON.parse(data);
-    } catch (err) {
-        console.error(`Error reading file ${filePath}:`, err);
-        return [];
+        const { limit = 10, page = 1, sort, category, price, status } = req.query;
+        const filters = {};
+
+        if (category) filters.category = category; // Filter by category
+        if (price) filters.price = Number(price); // Exact match for price
+        if (status !== undefined) filters.status = status === 'true'; // Filter by boolean status
+
+        const sortOption = sort === 'asc' ? { price: 1 } : (sort === 'desc' ? { price: -1 } : {});
+
+        const products = await Product.find(filters)
+            .sort(sortOption)
+            .limit(Number(limit))
+            .skip((page - 1) * limit);
+
+        const totalProducts = await Product.countDocuments(filters);
+        const totalPages = Math.ceil(totalProducts / limit);
+        console.log(totalPages);
+        console.log(totalProducts);
+
+        // Pagination details
+        const pagination = {
+            totalPages,
+            currentPage: Number(page),
+            hasPrevPage: page > 1,
+            hasNextPage: page < totalPages,
+            prevLink: page > 1 ? `/products?limit=${limit}&page=${page - 1}&sort=${sort}&category=${category}&price=${price}&status=${status}` : null,
+            nextLink: page < totalPages ? `/products?limit=${limit}&page=${page + 1}&sort=${sort}&category=${category}&price=${price}&status=${status}` : null,
+        };
+
+        console.log(pagination);
+
+        // Render the Handlebars template and pass the necessary data
+        res.render('realTimeProducts', {
+            products,
+            pagination
+        });
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
     }
-};
-
-// Helper function to write to JSON files
-const writeJsonFile = (filePath, data) => {
-    try {
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
-    } catch (err) {
-        console.error(`Error writing to file ${filePath}:`, err);
-    }
-};
-
-// Helper function to write to JSON files
-const saveCartsToFile = () => {
-    try {
-        fs.writeFileSync(cartsFilePath, JSON.stringify(carts, null, 2), 'utf-8');
-    } catch (err) {
-        console.error(`Error writing to file ${cartsFilePath}:`, err);
-    }
-};
-
-// Load data from file
-let products = readJsonFile(productsFilePath);
-let carts = readJsonFile(cartsFilePath);
-
-// Determine the next available product ID
-let nextId = products.length > 0 ? Math.max(...products.map(p => p.pid || 0)) + 1 : 1;
-
-// Get all products
-router.get('/', (req, res) => {
-    res.json(products);
 });
 
-// Get a specific product by ID
-router.get('/:pid', (req, res) => {
-    const productId = parseInt(req.params.pid, 10);
-    const product = products.find(p => p.pid === productId);
 
-    if (product) {
-        res.json(product);
-    } else {
-        res.status(404).send({ message: 'Product not found' });
+// Get a specific product by ID
+router.get('/:pid', async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.pid)) {
+            return res.status(400).json({ message: 'Invalid product ID format' });
+        }
+
+        const product = await Product.findById(req.params.pid);
+        if (product) {
+            res.json(product);
+        } else {
+            res.status(404).json({ message: 'Product not found' });
+        }
+    } catch (error) {
+        res.status(404).json({ message: 'Error retreiving product', error: error.message });
     }
 });
 
 // Add a new product
-router.post('/', (req, res) => {
-    const { title, description, code, price, status, stock, category, thumbnails } = req.body;
-
-    if (!title || !description || !code || price === undefined || status === undefined || stock === undefined || !category) {
-        return res.status(400).send({ message: 'Missing required fields' });
+router.post('/', async (req, res) => {
+    try {
+        const { title, description, code, price, status, stock, category, thumbnails } = req.body;
+        if (!title || !description || !code || price === undefined || status === undefined || stock === undefined || !category) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+        const newProduct = new Product({ title, description, code, price, status, stock, category, thumbnails });
+        await newProduct.save();
+        res.status(201).json(newProduct);
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
     }
-
-    const newProduct = {
-        pid: nextId++,
-        title,
-        description,
-        code,
-        price,
-        status,
-        stock,
-        category,
-        thumbnails
-    };
-
-    products.push(newProduct);
-    writeJsonFile(productsFilePath, products);
-    res.status(201).json(newProduct);
 });
 
-/*
-POSTMAN TEXT ONHAND TO ADD PRODUCT:
-{
-    "title": "PRODUCT A",
-    "description": "This is a description of the new product.",
-    "code": "NP123",
-    "price": 99.99,
-    "status": true,
-    "stock": 50,
-    "category": "New Category",
-    "thumbnails": [
-        "https://example.com/image1.jpg",
-        "https://example.com/image2.jpg"
-    ]
-}
-*/
+//BULK ADD
+// Add multiple products
+router.post('/bulk', async (req, res) => {
+    try {
+        const products = req.body; // Expecting an array of product objects
+
+        // Validate that products is an array and has at least one product
+        if (!Array.isArray(products) || products.length === 0) {
+            return res.status(400).json({ message: 'Invalid input: Expected an array of products' });
+        }
+
+        // Validate each product in the array
+        for (const product of products) {
+            const { title, description, code, price, status, stock, category, thumbnails } = product;
+            if (!title || !description || !code || price === undefined || status === undefined || stock === undefined || !category) {
+                return res.status(400).json({ message: 'Missing required fields in one or more products' });
+            }
+        }
+
+        // Insert multiple products
+        const result = await Product.insertMany(products);
+        res.status(201).json(result);
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+});
+
+
 
 // Delete a product by ID
-router.delete('/:pid', (req, res) => {
-    const productId = parseInt(req.params.pid, 10);
-    const productIndex = products.findIndex(p => p.pid === productId);
-
-    if (productIndex !== -1) { 
-        products.splice(productIndex, 1);
-
-        //remove from carts
-        carts.forEach(cart => {
-            const productInCartIndex = cart.cartProducts.findIndex(p => p.pid === productId);
-                if (productInCartIndex !== -1) {
-                    cart.cartProducts.splice(productInCartIndex, 1);
-                }
-            });
-        writeJsonFile(productsFilePath, products);
-        saveCartsToFile();
-        res.status(204).send({ message: 'Product deleted' });
-    } else {
-        res.status(404).send({ message: 'Product not found' });
+router.delete('/:pid', async (req, res) => {
+    try {
+        const product = await Product.findByIdAndDelete(req.params.pid);
+        if (product) {
+            res.status(204).json({ message: 'Product deleted' });
+        } else {
+            res.status(404).json({ message: 'Product not found' });
+        }
+    } catch (error) {
+        res.status(404).json({ message: 'Error deleting product', error: error.message });
     }
 });
 
 // Update a product by ID
-router.put('/:pid', (req, res) => {
-    const productId = parseInt(req.params.pid, 10);
-    const { title, description, code, price, status, stock, category, thumbnails } = req.body;
+router.put('/:pid', async (req, res) => {
+    try {
+        const { title, description, code, price, status, stock, category, thumbnails } = req.body;
+        const updates = { title, description, code, price, status, stock, category, thumbnails };
+        const product = await Product.findByIdAndUpdate(req.params.pid, updates, { new: true, runValidators: true });
+        if (product) {
+            res.json(product);
+        } else {
+            res.status(404).json({ message: 'Product not found' });
+        }
+    } catch (error) {
+        res.status(404).json({ message: 'Error updating product', error: error.message });
+    }
+});
 
-    const product = products.find(p => p.pid === productId);
-
-    if (product) {
-        if (title !== undefined) product.title = title;
-        if (description !== undefined) product.description = description;
-        if (code !== undefined) product.code = code;
-        if (price !== undefined) product.price = price;
-        if (status !== undefined) product.status = status;
-        if (stock !== undefined) product.stock = stock;
-        if (category !== undefined) product.category = category;
-        if (thumbnails !== undefined) product.thumbnails = thumbnails;
-
-        writeJsonFile(productsFilePath, products);
-        res.status(200).json(product);
-    } else {
-        res.status(404).send({ message: 'Product not found' });
+// Route to render individual product view
+router.get('/:pid', async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (product) {
+            res.render('individualProduct', { product });
+        } else {
+            res.status(404).send('Product not found');
+        }
+    } catch (error) {
+        res.status(500).send('Server error');
     }
 });
 
 module.exports = router;
+
