@@ -20,20 +20,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-// See selected cart NOW WITH POPULATED PRODUCTS
-// router.get('/:cid', async (req, res) => {
-//     try {
-//         const cart = await Cart.findOne({ cid: req.params.cid }).populate('cartProducts.pid');
-//         if (cart) {
-//             res.json(cart);
-//         } else {
-//             res.status(404).json({ message: 'Cart not found' });
-//         }
-//     } catch (err) {
-//         res.status(500).json({ message: 'Error retrieving cart', error: err.message });
-//     }
-// });
-
 router.get('/:cid', async (req, res) => {
     try {
         const { cid } = req.params;

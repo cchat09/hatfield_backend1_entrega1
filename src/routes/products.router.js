@@ -3,45 +3,6 @@ const router = express.Router();
 const Product = require('../models/Product');
 const mongoose = require('mongoose');
 
-// Get all products with optional query params
-// router.get('/', async (req, res) => {
-//     try {
-//         const { limit = 10, page = 1, sort, category, price, status } = req.query;
-//         // const filters = query ? { category: query } : {};
-//         const filters = {};
-//         if (category) {
-//             filters.category = category; // Filter by category
-//         }
-//         if (price) {
-//             filters.price = Number(price); // Exact match for price
-//         }
-//         if (status !== undefined) {
-//             filters.status = status === 'true'; // Filter by boolean status
-//         }
-//         const sortOption = sort === 'asc' ? { price: 1 } : (sort === 'desc' ? { price: -1 } : {});
-//         const products = await Product.find(filters).sort(sortOption).limit(Number(limit)).skip((page - 1) * limit);
-//         const totalProducts = await Product.countDocuments(filters);
-//         const totalPages = Math.ceil(totalProducts / limit);
-        
-//         const response = {
-//             status: 'success',
-//             payload: products,
-//             totalPages,
-//             prevPage: page > 1 ? page - 1 : null,
-//             nextPage: page < totalPages ? page + 1 : null,
-//             page: Number(page),
-//             hasPrevPage: page > 1,
-//             hasNextPage: page < totalPages,
-//             prevLink: page > 1 ? `/products?limit=${limit}&page=${page - 1}&sort=${sort}&query=${query}` : null,
-//             nextLink: page < totalPages ? `/products?limit=${limit}&page=${page + 1}&sort=${sort}&query=${query}` : null
-//         };
-
-//         // Use JSON.stringify to pretty-print with 2-space indentation
-//         res.send(JSON.stringify(response, null, 2));
-//     } catch (error) {
-//         res.status(500).json({ status: 'error', message: error.message });
-//     }
-// });
 
 // Get all products with optional query params
 router.get('/', async (req, res) => {
